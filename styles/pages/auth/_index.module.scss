@@ -1,0 +1,13 @@
+@import "../../base/variables";
+.auth {
+  min-height: 100vh;
+  background-color: $primary;
+  display: flex;
+  align-items: center;
+  .customRow{
+    justify-content: center;
+  }
+  .customCard{
+    background-color: whitesmoke;
+  }
+}

@@ -1,17 +1,14 @@
-export default function Field({ name, label, type, autoComplete, required }) {
-  return (
-    <div>
-      <label id={[name, 'label'].join('-')} htmlFor={[name, 'input'].join('-')}>
-        {label} {required ? <span title="Required">*</span> : undefined}
-      </label>
-      <br />
-      <input
-        autoComplete={autoComplete}
-        id={[name, 'input'].join('-')}
-        name={name}
-        required={required}
-        type={type}
-      />
-    </div>
-  )
+import {Form} from 'react-bootstrap'
+
+export default function Field({name, label, type, autoComplete, required, small = ""}) {
+    return (
+        <Form.Group controlId={[name, 'label'].join('-')}>
+            <Form.Label>{label} {required ? <span title="Required">*</span> : undefined}</Form.Label>
+            <Form.Control type={type} placeholder={`Enter your ${label}`} autoComplete={autoComplete} name={name}
+                          required={required}/>
+            <Form.Text className="text-muted">
+                {small}
+            </Form.Text>
+        </Form.Group>
+    )
 }

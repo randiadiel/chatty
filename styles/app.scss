@@ -1,0 +1,7 @@
+// Bootstrap
+@import "~bootstrap/scss/bootstrap";
+// Base
+@import "base/variables";
+@import "base/typograpy";
+// Pages
+@import "pages/auth/index.module";

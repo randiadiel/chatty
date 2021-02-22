@@ -1,6 +1,8 @@
 import { ApolloProvider } from '@apollo/client'
 import { useApollo } from '../apollo/client'
 
+import "../styles/app.scss"
+
 export default function App({ Component, pageProps }) {
   const apolloClient = useApollo(pageProps.initialApolloState)
 

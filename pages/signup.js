@@ -4,6 +4,8 @@ import Link from 'next/link'
 import { gql, useMutation } from '@apollo/client'
 import { getErrorMessage } from '../lib/form'
 import Field from '../components/field'
+import styles from "../styles/pages/auth/_index.module.scss";
+import {Button, Card, Col, Container, Row} from "react-bootstrap";
 
 const SignUpMutation = gql`
   mutation SignUpMutation($email: String!, $password: String!) {
@@ -41,30 +43,43 @@ function SignUp() {
   }
 
   return (
-    <>
-      <h1>Sign Up</h1>
-      <form onSubmit={handleSubmit}>
-        {errorMsg && <p>{errorMsg}</p>}
-        <Field
-          name="email"
-          type="email"
-          autoComplete="email"
-          required
-          label="Email"
-        />
-        <Field
-          name="password"
-          type="password"
-          autoComplete="password"
-          required
-          label="Password"
-        />
-        <button type="submit">Sign up</button> or{' '}
-        <Link href="/signin">
-          <a>Sign in</a>
-        </Link>
-      </form>
-    </>
+      <div className={styles.auth}>
+        <Container>
+          <Row className={styles.customRow}>
+            <Col md={6}>
+              <Card className={styles.customCard}>
+                <Card.Body>
+                  <h1>Sign Up</h1>
+                  <form onSubmit={handleSubmit}>
+                    {errorMsg && <p>{errorMsg}</p>}
+                    <Field
+                        name="email"
+                        type="email"
+                        autoComplete="email"
+                        required
+                        label="Email"
+                    />
+                    <Field
+                        name="password"
+                        type="password"
+                        autoComplete="password"
+                        required
+                        label="Password"
+                    />
+                    <Button variant={"primary"} type="submit" className={"mt-3"}>Sign Up</Button>
+                  </form>
+                </Card.Body>
+                <Card.Footer>
+                  {'Already have an account? '}
+                  <Link href="/signin">
+                    <a>Sign in.</a>
+                  </Link>
+                </Card.Footer>
+              </Card>
+            </Col>
+          </Row>
+        </Container>
+      </div>
   )
 }
 
