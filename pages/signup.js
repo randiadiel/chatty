@@ -5,7 +5,7 @@ import { gql, useMutation } from '@apollo/client'
 import { getErrorMessage } from '../lib/form'
 import Field from '../components/field'
 import styles from "../styles/pages/auth/_index.module.scss";
-import {Button, Card, Col, Container, Row} from "react-bootstrap";
+import {Alert, Button, Card, Col, Container, Row, Spinner} from "react-bootstrap";
 
 const SignUpMutation = gql`
   mutation SignUpMutation($email: String!, $password: String!) {
@@ -21,10 +21,12 @@ const SignUpMutation = gql`
 function SignUp() {
   const [signUp] = useMutation(SignUpMutation)
   const [errorMsg, setErrorMsg] = useState()
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const router = useRouter()
 
   async function handleSubmit(event) {
     event.preventDefault()
+    setIsSubmitting(true)
     const emailElement = event.currentTarget.elements.email
     const passwordElement = event.currentTarget.elements.password
 
@@ -39,6 +41,7 @@ function SignUp() {
       await router.push('/signin')
     } catch (error) {
       setErrorMsg(getErrorMessage(error))
+      setIsSubmitting(false)
     }
   }
 
@@ -46,12 +49,12 @@ function SignUp() {
       <div className={styles.auth}>
         <Container>
           <Row className={styles.customRow}>
-            <Col md={6}>
+            <Col md={5}>
               <Card className={styles.customCard}>
                 <Card.Body>
                   <h1>Sign Up</h1>
                   <form onSubmit={handleSubmit}>
-                    {errorMsg && <p>{errorMsg}</p>}
+                    {errorMsg && <Alert variant={"danger"}>{errorMsg}</Alert>}
                     <Field
                         name="email"
                         type="email"
@@ -66,7 +69,9 @@ function SignUp() {
                         required
                         label="Password"
                     />
-                    <Button variant={"primary"} type="submit" className={"mt-3"}>Sign Up</Button>
+                    <Button variant={"primary"} type="submit" className={"mt-3"}>
+                      Sign Up {isSubmitting && <Spinner as={"span"} size={"sm"} role={"status"} animation={"border"}/>}
+                    </Button>
                   </form>
                 </Card.Body>
                 <Card.Footer>

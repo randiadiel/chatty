@@ -3,7 +3,7 @@ import {useRouter} from 'next/router'
 import Link from 'next/link'
 import {gql} from '@apollo/client'
 import {useMutation, useApolloClient} from '@apollo/client'
-import {Row, Button, Card, Container, Col} from "react-bootstrap";
+import {Row, Button, Card, Container, Col, Alert, Spinner} from "react-bootstrap";
 import {getErrorMessage} from '../lib/form'
 import Field from '../components/field'
 import styles from '../styles/pages/auth/_index.module.scss'
@@ -23,11 +23,12 @@ function SignIn() {
     const client = useApolloClient()
     const [signIn] = useMutation(SignInMutation)
     const [errorMsg, setErrorMsg] = useState()
+    const [isSubmitting, setIsSubmitting] = useState(false)
     const router = useRouter()
 
     async function handleSubmit(event) {
         event.preventDefault()
-        console.log(styles)
+        setIsSubmitting(true)
 
         const emailElement = event.currentTarget.elements.email
         const passwordElement = event.currentTarget.elements.password
@@ -45,6 +46,7 @@ function SignIn() {
             }
         } catch (error) {
             setErrorMsg(getErrorMessage(error))
+            setIsSubmitting(false)
         }
     }
 
@@ -52,12 +54,12 @@ function SignIn() {
         <div className={styles.auth}>
             <Container>
                 <Row className={styles.customRow}>
-                    <Col md={6}>
+                    <Col md={5}>
                         <Card className={styles.customCard}>
                             <Card.Body>
                                 <h1>Sign In</h1>
                                 <form onSubmit={handleSubmit}>
-                                    {errorMsg && <p>{errorMsg}</p>}
+                                    {errorMsg && <Alert variant={"danger"}>{errorMsg}</Alert>}
                                     <Field
                                         name="email"
                                         type="email"
@@ -72,7 +74,9 @@ function SignIn() {
                                         required
                                         label="Password"
                                     />
-                                    <Button variant={"primary"} type="submit" className={"mt-3"}>Sign in</Button>
+                                    <Button variant={"primary"} type="submit" className={"mt-3"} disabled={isSubmitting}>
+                                        Sign in {isSubmitting && <Spinner as={"span"} size={"sm"} role={"status"} animation={"border"}/>}
+                                    </Button>
                                 </form>
                             </Card.Body>
                             <Card.Footer>
