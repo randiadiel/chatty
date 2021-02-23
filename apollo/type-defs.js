@@ -9,6 +9,13 @@ export const typeDefs = gql`
     lastName: String!
     hashtag: String!
   }
+  
+  type Chat {
+    id: ID!
+    from: String!
+    to: String!
+    message: String!
+  }
 
   input SignUpInput {
     email: String!
@@ -40,5 +47,9 @@ export const typeDefs = gql`
     signUp(input: SignUpInput!): SignUpPayload!
     signIn(input: SignInInput!): SignInPayload!
     signOut: Boolean!
+  }
+  
+  type Subscription {
+    newMessage: Chat
   }
 `
