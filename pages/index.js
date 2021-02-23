@@ -7,7 +7,8 @@ const ViewerQuery = gql`
   query ViewerQuery {
     viewer {
       id
-      email
+      firstName
+      lastName
     }
   }
 `
@@ -32,7 +33,7 @@ const Index = () => {
   if (viewer) {
     return (
       <div>
-        You're signed in as {viewer.email} goto{' '}
+        You're signed in as {viewer.firstName} {viewer.lastName} goto{' '}
         <Link href="/about">
           <a>about</a>
         </Link>{' '}

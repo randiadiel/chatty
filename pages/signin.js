@@ -54,7 +54,7 @@ function SignIn() {
         <div className={styles.auth}>
             <Container>
                 <Row className={styles.customRow}>
-                    <Col md={5}>
+                    <Col lg={6} xl={5}>
                         <Card className={styles.customCard}>
                             <Card.Body>
                                 <h1>Sign In</h1>

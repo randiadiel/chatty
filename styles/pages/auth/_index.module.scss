@@ -1,7 +1,7 @@
 @import "../../base/variables";
 .auth {
   min-height: 100vh;
-  background-color: $primary;
+  background: $linear-gradient;
   display: flex;
   align-items: center;
   .customRow{

@@ -8,11 +8,13 @@ import styles from "../styles/pages/auth/_index.module.scss";
 import {Alert, Button, Card, Col, Container, Row, Spinner} from "react-bootstrap";
 
 const SignUpMutation = gql`
-  mutation SignUpMutation($email: String!, $password: String!) {
-    signUp(input: { email: $email, password: $password }) {
+  mutation SignUpMutation($email: String!, $password: String!, $firstName: String!, $lastName: String!) {
+    signUp(input: { email: $email, password: $password, firstName: $firstName, lastName: $lastName }) {
       user {
         id
         email
+        firstName
+        lastName
       }
     }
   }
@@ -29,19 +31,30 @@ function SignUp() {
     setIsSubmitting(true)
     const emailElement = event.currentTarget.elements.email
     const passwordElement = event.currentTarget.elements.password
+    const firstName = event.currentTarget.elements.firstName
+    const lastName = event.currentTarget.elements.lastName
+    const confirmPassword = event.currentTarget.elements.confirmPassword
 
-    try {
-      await signUp({
-        variables: {
-          email: emailElement.value,
-          password: passwordElement.value,
-        },
-      })
-
-      await router.push('/signin')
-    } catch (error) {
-      setErrorMsg(getErrorMessage(error))
+    if (passwordElement.value !== confirmPassword.value) {
+      setErrorMsg("Password you enter is not the same")
       setIsSubmitting(false)
+    }
+    else {
+      try {
+        await signUp({
+          variables: {
+            email: emailElement.value,
+            password: passwordElement.value,
+            firstName: firstName.value,
+            lastName: lastName.value,
+          },
+        })
+
+        await router.push('/signin')
+      } catch (error) {
+        setErrorMsg(getErrorMessage(error))
+        setIsSubmitting(false)
+      }
     }
   }
 
@@ -49,12 +62,30 @@ function SignUp() {
       <div className={styles.auth}>
         <Container>
           <Row className={styles.customRow}>
-            <Col md={5}>
+            <Col lg={6} xl={5}>
               <Card className={styles.customCard}>
                 <Card.Body>
                   <h1>Sign Up</h1>
                   <form onSubmit={handleSubmit}>
                     {errorMsg && <Alert variant={"danger"}>{errorMsg}</Alert>}
+                    <Row>
+                      <Col md={6}>
+                        <Field
+                            name="firstName"
+                            type="text"
+                            label="First Name"
+                            required
+                        />
+                      </Col>
+                      <Col md={6}>
+                        <Field
+                            name="lastName"
+                            type="text"
+                            label="Last Name"
+                            required
+                        />
+                      </Col>
+                    </Row>
                     <Field
                         name="email"
                         type="email"
@@ -68,6 +99,13 @@ function SignUp() {
                         autoComplete="password"
                         required
                         label="Password"
+                    />
+                    <Field
+                        name="confirmPassword"
+                        type="password"
+                        autoComplete="confirm-password"
+                        required
+                        label="Confirm Password"
                     />
                     <Button variant={"primary"} type="submit" className={"mt-3"}>
                       Sign Up {isSubmitting && <Spinner as={"span"} size={"sm"} role={"status"} animation={"border"}/>}
