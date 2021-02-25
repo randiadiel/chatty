@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import { gql, useMutation } from '@apollo/client'
-import { getErrorMessage } from '../lib/form'
+import {getBadInputError, getErrorMessage} from '../lib/form'
 import Field from '../components/field'
 import styles from "../styles/pages/auth/_index.module.scss";
 import {Alert, Button, Card, Col, Container, Row, Spinner} from "react-bootstrap";
@@ -24,6 +24,7 @@ function SignUp() {
   const [signUp] = useMutation(SignUpMutation)
   const [errorMsg, setErrorMsg] = useState()
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [inputErrors, setInputErrors] = useState()
   const router = useRouter()
 
   async function handleSubmit(event) {
@@ -53,6 +54,7 @@ function SignUp() {
         await router.push('/signin')
       } catch (error) {
         setErrorMsg(getErrorMessage(error))
+        setInputErrors(getBadInputError(error).extensions.validationErrors)
         setIsSubmitting(false)
       }
     }
@@ -67,7 +69,12 @@ function SignUp() {
                 <Card.Body>
                   <h1>Sign Up</h1>
                   <form onSubmit={handleSubmit}>
-                    {errorMsg && <Alert variant={"danger"}>{errorMsg}</Alert>}
+                    {(errorMsg) && <Alert variant={"danger"}><small>{errorMsg}</small> {(inputErrors) &&
+                    <ul className={styles.errorList}>
+                      {inputErrors.map((error) => {
+                        return <li key={error.context.key}><small>{error.message}</small></li>
+                      })}
+                    </ul>}</Alert>}
                     <Row>
                       <Col md={6}>
                         <Field

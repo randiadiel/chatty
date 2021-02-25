@@ -2,6 +2,7 @@ import { AuthenticationError, UserInputError } from 'apollo-server-micro'
 import {createUser, findUser, getAllUser, validatePassword} from '../lib/user'
 import { setLoginSession, getLoginSession } from '../lib/auth'
 import { removeTokenCookie } from '../lib/auth-cookies'
+import Joi from 'joi'
 
 export const resolvers = {
   Query: {
@@ -29,6 +30,16 @@ export const resolvers = {
   },
   Mutation: {
     async signUp(_parent, args, _context, _info) {
+      const validationSchema = Joi.object({
+        email: Joi.string().email().max(255).required(),
+        firstName: Joi.string().alphanum().max(255).pattern(new RegExp("^[0-9a-zA-Z]*$")).required(),
+        lastName: Joi.string().alphanum().max(255).pattern(new RegExp("^[0-9a-zA-Z]*$")).required(),
+        password: Joi.string().min(8).pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')).required(),
+      });
+      const {value, error} = validationSchema.validate(args.input)
+      if (error) {
+        throw new UserInputError("Error signing you up, please check your input again!", {validationErrors: error.details})
+      }
       const user = await createUser(args.input)
       return { user }
     },
