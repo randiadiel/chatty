@@ -1,5 +1,5 @@
 import { AuthenticationError, UserInputError } from 'apollo-server-micro'
-import { createUser, findUser, validatePassword } from '../lib/user'
+import {createUser, findUser, getAllUser, validatePassword} from '../lib/user'
 import { setLoginSession, getLoginSession } from '../lib/auth'
 import { removeTokenCookie } from '../lib/auth-cookies'
 
@@ -18,6 +18,14 @@ export const resolvers = {
         )
       }
     },
+    async users(_parent, _args, context, _info) {
+      try {
+        return getAllUser()
+      }
+      catch (e) {
+        throw new Error(e)
+      }
+    }
   },
   Mutation: {
     async signUp(_parent, args, _context, _info) {

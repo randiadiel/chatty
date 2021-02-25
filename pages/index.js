@@ -6,7 +6,6 @@ import { gql, useQuery } from '@apollo/client'
 const ViewerQuery = gql`
   query ViewerQuery {
     viewer {
-      id
       firstName
       lastName
     }

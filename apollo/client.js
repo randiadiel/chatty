@@ -4,6 +4,7 @@ import {getMainDefinition} from "@apollo/client/utilities";
 import merge from 'deepmerge'
 
 let apolloClient
+const SUBSCRIPTION_URI = "ws://localhost:3000/subsription"
 
 function createIsomorphLink() {
   if (typeof window === 'undefined') {
@@ -20,7 +21,7 @@ function createIsomorphLink() {
     })
 
     const webSocketLink = new WebSocketLink({
-      uri: 'ws://localhost:3000/graphql',
+      uri: SUBSCRIPTION_URI,
       options: {
         reconnect: true
       },
